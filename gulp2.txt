@@ -1,0 +1,107 @@
+gulp
+[官网](http://www.gulpjs.com)
+[中文网](http://www.gulpjs.com.cn)
+
+https://mp.weixin.qq.com/debug/wxadoc/dev/
+
+https://github.com/PsChina
+https://github.com/76351506    heinan 
+
+https://github.com/egoist
+https://github.com/yyx990803
+
+
+https://www.liaoxuefeng.com/
+
+http://www.ituring.com.cn/
+
+http://git.oschina.net/progit/
+
+https://www.w3cschool.cn/
+
+https://www.zhihu.com/explore
+
+http://www.jianshu.com/
+
+https://github.com/cmDora
+
+https://www.cnblogs.com/ermu-learn/p/5913760.html
+
+https://github.com/angular
+
+gulp 自动化构建工具   基于nodejs
+
+gulp add命令执行时
+The file will have its original line endings in your working directory.
+该文件将在您的工作目录中有其原始的行尾。
+
+
+//只要执行default任务，就相当于把one,two,three这三个任务执行了
+gulp.task('default',['one','two','three']);
+
+// 压缩一个html任务
+gulp.task('html', function () {
+    gulp.src('index.html')
+        .pipe(htmlmin({collapseWhitespace: true})) // html方法不同于其他两个方法需要使用参数 参数值只能是布尔值
+        .pipe(gulp.dest('./dist')); // dist处理过后的文件存放的目录
+});
+
+
+gulp-clean的API用法：
+
+var gulp = require('gulp');
+var clean = require('gulp-clean');
+gulp.task('default', function() {
+    gulp.src('app/tmp')
+        .pipe(clean());
+});
+
+
+less使用gulp-less,安装？？？？？？？？？？？？？？？？？？？？？？？？？？
+var gulp = require('gulp'),
+    less = require("gulp-less");
+ 
+gulp.task('compile-less', function () {
+    gulp.src('less/*.less')
+    .pipe(less())
+    .pipe(gulp.dest('dist/css'));
+});
+
+sass使用gulp-sass,安装：？？？？？？？？？？？？？？？？？？？？？？？
+var gulp = require('gulp'),
+    sass = require("gulp-sass");
+ 
+gulp.task('compile-sass', function () {
+    gulp.src('sass/*.sass')
+    .pipe(sass())
+    .pipe(gulp.dest('dist/css'));
+});
+
+gulp-autoprefixer     gulp-cssnano    gulp-jshint    browser-sync
+var gulp = require('gulp');
+var autoprefixer = require('gulp-autoprefixer'); // 处理css中浏览器兼容的前缀  
+var rename = require('gulp-rename'); //重命名  
+var cssnano = require('gulp-cssnano'); // css的层级压缩合并
+var sass = require('gulp-sass'); //sass
+var jshint = require('gulp-jshint'); //js检查 ==> npm install --save-dev jshint gulp-jshint（.jshintrc：https://my.oschina.net/wjj328938669/blog/637433?p=1）  
+var uglify = require('gulp-uglify'); //js压缩  
+var concat = require('gulp-concat'); //合并文件  
+var imagemin = require('gulp-imagemin'); //图片压缩 
+var browserSync = require('browser-sync').create();
+var reload = browserSync.reload;
+var Config = require('./gulpfile.config.js');
+
+
+gulp.task('default',  []);
+
+gulp.src()方法
+gulp.src('单个文件')
+gulp.src( [ file1, file2 ] )  多个文件  数组的格式
+
+minifyCss = require('gulp-minify-css');
+minifyCss()  是一个方法    参数?
+
+gulp.dest('路径')  输出时放的位置
+
+引入gulp定义默认任务  (default任务必须实现 ) default是所有任务的入口
+

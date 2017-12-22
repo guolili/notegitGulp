@@ -1,0 +1,103 @@
+这时，我们可以使用 merge-stream 来“合并”多个 Stream，使其再次变为单个 Stream，再以它为返回值——这样便解决了问题。在做了很简单的修改之后，实现代码如下：
+
+var mergeStream = require('merge-stream');
+gulp.task("minify", function() {
+    var mincss = gulp.src('./styles/**/*.css',  { base: "./" })
+        .pipe(cssmin())
+        .pipe(gulp.dest('.'));
+
+    var minjs = gulp.src('./scripts/**/*.js',  { base: "./" })
+        .pipe(uglify())
+        .pipe(gulp.dest("."));
+    
+    return mergeStream(mincss, minjs);
+});
+
+按顺序逐个同步地运行 Gulp 任务 ！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+
+当然，问题总是有解决方案的。
+
+国内的 Teambition 团队开源了 gulp-sequence ，以及国外开发者开发的 run-sequence 均能很好地解决这个问题。它们提供了类似的调用方式，下面的代码演示如何使用 run-sequence 按顺序地运行多个或多组 Gulp 任务：
+
+var runSequence = require('run-sequence');
+gulp.task('default', function(callback) {
+    runSequence('clean',
+        ['less', 'scripts'],
+        'watch',
+        callback);
+});
+
+在上述代码中，clean 先于所有其他任务运行，在 clean 完成后，less 与 scripts 同时运行；在 less 与 scripts 都运行完成之后，watch 最后运行。并且，在 watch 运行完毕后，会调用 callback，以通知 Gulp 引擎。
+
+在单个 Gulp 任务中合并多个步骤
+
+一个典型的 minify 任务可能既包含对 JavaScript 文件的压缩，又包含对 css 文件的压缩；但对 JavaScript 使用的是 uglify，而对 css 的压缩则是使用的 cssmin。这时，我们写了如下的任务：
+
+gulp.task("minify", function() {
+    gulp.src('./styles/**/*.css',  { base: "./" })
+        .pipe(cssmin())
+        .pipe(gulp.dest('.'));
+
+    gulp.src('./scripts/**/*.js',  { base: "./" })
+        .pipe(uglify())
+        .pipe(gulp.dest("."));
+});
+
+上述任务中，链式调用的 pipe 方法返回的是异步的 Stream 对象 ，如果我们需要监控整个 minify 任务的完成情况（那样，别的任务就可以依赖 minify 了），就比较麻烦了。如果任务里只有单纯的一个 pipe 链式步骤，那我们将其直接作为返回值即可。而现在我们有两个异步的 Stream，理论上，这两个 Stream 都完成时，整个 minify 任务就完成了。
+
+这时，我们可以使用 merge-stream 来“合并”多个 Stream，使其再次变为单个 Stream，再以它为返回值——这样便解决了问题。在做了很简单的修改之后，实现代码如下：
+
+var mergeStream = require('merge-stream');
+gulp.task("minify", function() {
+    var mincss = gulp.src('./styles/**/*.css',  { base: "./" })
+        .pipe(cssmin())
+        .pipe(gulp.dest('.'));
+
+    var minjs = gulp.src('./scripts/**/*.js',  { base: "./" })
+        .pipe(uglify())
+        .pipe(gulp.dest("."));
+    
+    return mergeStream(mincss, minjs);
+});
+
+在单个任务里以同步的方式运行多个步骤
+
+在 Gulp 的世界里，“在单个任务同步地运行多个步骤” 这个想法是不是觉得有些疯狂？即使在普通 node.js 应用程序里，这样的想法都会是比较格格不入的。不过，我不喜欢被束住手脚的感觉，虽然我可以使用上面的“以同步的方式运行多个任务”那样来完成工作，但我仍偏执地认为一些小的步骤应该被放置在单个任务里。
+
+例如一个典型的样式表编译工作，我希望 scss 文件编译为 css 文件之后，自动生成对应的压缩版本。我可以这样编写 Gulp 脚本：
+
+gulp.task('scss', function() {
+    return gulp.src('./scss/**/*.scss',  { base: "./" })
+        .pipe(sass())
+        .pipe(gulp.dest('./styles'));
+});
+
+gulp.task('cssmin', ['scss'], function(){
+    return gulp.src('./styles/**/*.css',  { base: "./" })
+        .pipe(cssmin())
+        .pipe(gulp.dest('.'));
+});
+
+这样，每次执行 cssmin 任务即可完成所有工作，一切看起来很美好。直到我的样式表编译工作需要在 cssmin 之后需要增加一个新的步骤：将所有的 css 文件合并成单个文件。这时候，我需要在 cssmin 的任务之后再增加一个 css-concat 来完成工作。所有这一切，只是为了这样一个 “样式表编译工作”。为什么我不能用单个的 compile-css 来包含这所有的步骤，并且在将来任何时候再愉快地增加新的步骤呢？
+
+后来经过观察发现，我几乎从来不会专门去调用 scss，或者 cssmin，我只会直接调用最终的 css-concat——这再一次为“单个的 compile-css 任务”的需求提供了佐证。
+
+于是，我动手解决了它，发布了 gulp-awaitable-tasks 这样一个 npm 包。有了它，我们可以这样编写 Gulp 任务，注意声明时匿名函数上的星号（*）及函数内部的 yield 关键字：
+
+ require('gulp-awaitable-tasks')(gulp);
+
+ gulp.task('compile-css', function*() {
+    yield gulp.src('./scss/**/*.scss',  { base: "./" })
+        .pipe(sass())
+        .pipe(gulp.dest('./styles'));
+
+    yield gulp.src('./styles/**/*.css',  { base: "./" })
+        .pipe(cssmin())
+        .pipe(gulp.dest('.'));
+ });
+
+至于原理，就像能够使用Generator 函数来解决 异步回调大坑（callback hell） 的做法一样，Generator 函数在此处也可以帮到我们。只有不到 50 行代码，请自行参考。
+
+写在最后
+
+Gulp 本身已是一个优秀的任务组织工具，再加上基于它有大量插件，绝大多数的前端任务它已经能够帮助我们很多。不过工具要用的称心如意，还是需要磨合的。希望此文章介绍的技巧和工具能够帮助您提高效率。

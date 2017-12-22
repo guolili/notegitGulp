@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>dsfd11111</div>
+<script type="text/javascript">
+    function ajax(url) {
+        return new Promise(function (resolve, reject) {
+            var xhr = null;
+            var handler = function () {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status == 200) {
+                    resolve(xhr.responseText)
+                } else {
+                    reject(new Error(xhr.statusText));
+                }
+            }
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                xhr = new ActiveXObject("Microsoft.XMLHTTP")
+            }
+            xhr.open("GET", url, true);
+            xhr.send();
+            xhr.onreadystatechange = handler;
+        })
+    }
+    ajax("http://localhost:8080/list/").then(function (result) {
+        console.log(JSON.parse(result)[0]["name"]);
+    }).catch(function (error) {
+        console.log(error)
+    });
+
+</script>
+</body>
+</html>

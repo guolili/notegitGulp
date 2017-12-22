@@ -1,0 +1,30 @@
+页面传参数方法：1、$rootScope。2、（url）/user/:name/:age。
+页面转换方法：1、href="#/"。2、$state.go。3、$location.path。4、ui-sref
+
+$location 服务
+AngularJS提供了一个服务用以解析地址栏中的URL，并让你可以访问应用当前路径所对应
+的路由。它同样提供了修改路径和处理各种形式导航的能力。
+　　我们一般比较常用的：
+　1. path()
+　　path() 用来获取页面当前的路径：
+　　$location.path(); // 返回当前路径
+　　修改当前路径并跳转到应用中的另一个URL：
+　　$location.path('/'); // 把路径修改为 '/' 路由
+  2. replace()
+  如果你希望跳转后用户不能点击后退按钮（对于登录之后的跳转这种发生在某个跳转之后的
+  再次跳转很有用）， AngularJS提供了replace() 方法来实现这个功能：
+  $location.path('/home');
+  $location.replace();
+  // 或者
+  $location.path('/home').replace();
+
+
+<div ng-view></div>   这里面呢。就是我们注入的某个模板（template） 例如：<div ng-view=“tpl/abc.html”></div> 就相当于注入叫做abc.html的模板。ng-view这个指令优先级是1000的终极指令。就是说权限很高。
+
+　　在注入这个abc.html的模板的时候。我们一般都用了路由设置，路由相当于一个遥控器。这个ng-view就是一部电视机。如果某个模板同当前的路由相关联：
+1 创建一个新的作用域；(用路由（遥控器）打开某个电视台)
+2 移除上一个视图，同时上一个作用域也会被清除；（换台，什么都没了）
+3 将新的作用域同当前模板关联在一起；（电视机播放新的电视台）
+4 如果路由中有相关的定义，那么就把对应的控制器同当前作用域关联起来；
+5 触发$viewContentLoaded事件；
+6 如果提供了onload属性，调用该属性所指定的函数。

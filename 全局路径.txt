@@ -1,0 +1,9 @@
+文件node 的安装  
+eg: d:\Node     nodejs安装   npm  npm-cache  
+三个文件    其所在的路径为环境变量的路径
+
+修改3个环境变量
+系统变量  nodejs   npm
+用户变量  npm
+
+引入模块 先从当前文件夹开始找 再次向父级查找  node_modules 模块

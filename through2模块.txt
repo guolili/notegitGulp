@@ -1,0 +1,93 @@
+1.引入npm包
+可以引入through-gulp
+或者是through2
+
+作者：zhaoye
+链接：https://www.zhihu.com/question/39391770/answer/93170896
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+through2是对node.js原生stream.Transform进行的封装。源码中定义了一个DestroyableTransform一般gulp的插件都会用through2，这是因为gulp使用了vinyl-fs，而vinyl-fs使用了through2。throuhg2一般有两种用法。through2(function(chunk,enc,cb){})
+through2.obj(function(chunk,enc,cb){})
+普通的stream用起来和第一种基本一样fs.createReadStream('./tt.txt')
+.pipe(through2(function(chunk,enc,cb){
+    console.log('thr2')
+    cb(null,chunk)
+}))
+.pipe(fs.createWriteStream('./aa.txt'))
+
+fs.createReadStream('./tt.txt')
+.pipe(new require('stream').Transform({
+    transform: function(chunk,enc,cb){
+        console.log('common')
+        cb(null,chunk)
+    }
+}))
+.pipe(fs.createWriteStream('./aa.txt'))
+gulp里这么用会报错gulp.task('error',function(){
+    return gulp.src('./tt.txt')
+            .pipe(through2(function(chunk,enc,cb){
+                console.log('thr2 in gulp with error')
+                cb(null,chunk)
+            }))
+            .pipe(gulp.dest('./'))
+})
+
+gulp.task('error',function(){
+    return gulp.src('./tt.txt')
+            .pipe(new require('stream').Transform({
+                transform: function(chunk,enc,cb){
+                    console.log('common')
+                    cb(null,chunk)
+                }
+            }))
+            .pipe(gulp.dest('./'))
+})
+
+/*
+events.js:141
+      throw er; // Unhandled 'error' event
+      ^
+
+TypeError: Invalid non-string/buffer chunk
+    at validChunk (/home/zhaoye/workspace/lab/streamtest/node_modules/through2/node_modules/readable-stream/lib/_stream_writable.js:218:14)
+    at DestroyableTransform.Writable.write (/home/zhaoye/workspace/lab/streamtest/node_modules/through2/node_modules/readable-stream/lib/_stream_writable.js:239:53)
+    at write (/home/zhaoye/workspace/lab/streamtest/node_modules/gulp/node_modules/vinyl-fs/node_modules/through2/node_modules/readable-stream/lib/_stream_readable.js:623:24)
+    at flow (/home/zhaoye/workspace/lab/streamtest/node_modules/gulp/node_modules/vinyl-fs/node_modules/through2/node_modules/readable-stream/lib/_stream_readable.js:632:7)
+    at DestroyableTransform.pipeOnReadable (/home/zhaoye/workspace/lab/streamtest/node_modules/gulp/node_modules/vinyl-fs/node_modules/through2/node_modules/readable-stream/lib/_stream_readable.js:664:5)
+    at emitNone (events.js:67:13)
+    at DestroyableTransform.emit (events.js:166:7)
+    at emitReadable_ (/home/zhaoye/workspace/lab/streamtest/node_modules/gulp/node_modules/vinyl-fs/node_modules/through2/node_modules/readable-stream/lib/_stream_readable.js:448:10)
+    at emitReadable (/home/zhaoye/workspace/lab/streamtest/node_modules/gulp/node_modules/vinyl-fs/node_modules/through2/node_modules/readable-stream/lib/_stream_readable.js:444:5)
+    at readableAddChunk (/home/zhaoye/workspace/lab/streamtest/node_modules/gulp/node_modules/vinyl-fs/node_modules/through2/node_modules/readable-stream/lib/_stream_readable.js:187:9)
+*/
+gulp里要用through2.obj，也就是object streamgulp.task('test',function(){    return gulp.src('./tt.txt')
+            .pipe(through2.obj(function(chunk,enc,cb){
+                console.log('thr2 in gulp')
+                cb(null,chunk)
+            }))
+            .pipe(gulp.dest('./'))
+})
+总之写gulp插件基本跑不了用through2了。。。所以你会看到各种through2的引用。写stream的时候也很常用，毕竟封装了之后，语法清晰，且有更强大的功能through2具体原理并没有仔细看，不太了解原理（其实是水平太low你让我讲我也讲不出来　╮(╯▽╰)╭ ），有时间研究下源码补充下＝。＝编辑于 2016-04-014?添加评论?分享?收藏?感谢收起更多回答鲁小夫用户标识             前端开发、JavaScript 话题的优秀回答者5 人赞同了该回答用来处理 stream 的。。。Node 自带的 stream API 不好用。https://r.va.gg/2014/06/why-i-dont-use-nodes-core-stream-module.html发布于 2016-01-115?添加评论?分享?收藏?感谢张猴四散物我的看法是帮你新建一个Stream， 把你的transform函数给了Stream的_transform属性。让你只关注对流的处理不需要每次都要去new Stream一下比如咱们创建一个大写化的stream，平常是这样子的class ThroughStream extends stream.Transform {
+  constructor(options) {
+    super(options);
+  }
+
+  _transform(chunk, enc, cb) {
+    this.push(chunk.toString().replace(/\n/, '').toUpperCase());
+    cb();
+  }
+}
+使用的话, 可以这样子process.stdin
+.pipe(
+  new ThroughStream({
+    objectMode: true
+  })
+)
+.pipe(process.stdout)
+但是如果是through2的话, 它内置帮你创建好对应的stream了, 所以只需要实现_transform就行了。process.stdin.pipe(through.obj(
+  function(chunk, enc, cb) 
+    this.push(chunk.toString().replace(/\n/, '').toUpperCase() + '\n')
+    cb();
+  }
+)).pipe(process.stdout)l

@@ -1,0 +1,133 @@
+郝楠讲师  13031061118
+weixin: hn76351506
+qq: 76351506
+
+169.254.148.21
+169.254.136.148
+
+徽标键  +  r  运行
+
+https://github.com/PsChina  angular的js网页
+http://www.jianshu.com/p/c17472d704a0  简书
+http://www.ituring.com.cn/article/472252   图灵
+
+http://git.oschina.net/progit/
+
+https://rubygems.org/gems
+
+
+https://github.com/lilydream/angular.git     https协议
+git@github.com:lilydream/angular.git    ssh 协议
+
+run 运行  邮箱 用户名
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
+
+pathspec 'master' did not match any file(s) known to git.
+pathspec“主”与git所知的任何文件(s)都不匹配。
+
+
+文件
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1 (master)
+$ git commit -m "first commit"
+On branch master
+nothing to commit, working tree clean
+
+
+$ git clone https://github.com/lilydream/angular.git
+Cloning into 'angular'...
+warning: You appear to have cloned an empty repository.  您似乎已经克隆了一个空存储库
+
+create a new repository on the command line
+在命令行上创建一个新的存储库
+
+push an existing repository from the command line
+从命令行推一个现有的存储库
+
+克隆文件步骤
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1 (master)
+$ git clone https://github.com/lilydream/ang.git
+Cloning into 'ang'...
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git push https://github.com/lilydream/angular.git
+fatal: The current branch master has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream https://github.com/lilydream/angular.git master
+
+
+$ git push -u origin master
+error: src refspec master does not match any.
+error: failed to push some refs to 'https://github.com/13717920517/ang.git'
+
+
+发布步骤
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git init
+Initialized empty Git repository in D:/GOD/Angular.js/WK/class1/up/.git/
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git add qq.txt
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git commit -m "wrote a file"
+[master (root-commit) 56ad746] wrote a file
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 qq.txt
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git add qq.txt
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git commit -m "qq"
+[master 18a55e3] qq
+ 1 file changed, 1 insertion(+)
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git remote add origin https://github.com/lilydream/angular.git
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+$ git push -u origin master
+Counting objects: 6, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (6/6), 411 bytes | 0 bytes/s, done.
+Total 6 (delta 0), reused 0 (delta 0)
+To https://github.com/lilydream/angular.git
+ * [new branch]      master -> master
+Branch master set up to track remote branch master from origin.
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 /d/GOD/Angular.js/WK/class1/up (master)
+
+
+fatal: remote origin already exists.  已经存在
+
+
+fatal: The current branch master has no upstream branch
+当前的分支机构没有上游分支
+
+
+Everything up-to-date
+最新的
+Branch master set up to track remote branch master from origin.
+分支主设置用于跟踪远程分支主机的起源。
+
+
+两次提交
+第一次正常提交 
+第二次 add  commit   push 
+
+cnpm install -g gulp 
+
+npm gulp -v 版本号

@@ -1,0 +1,8 @@
+合并分支
+Fast forword  删除分支后 丢掉分支信息
+
+
+--no-ff 的 git merge
+11   dev 分支
+    git checkout -b dev 
+22   git add 

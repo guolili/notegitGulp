@@ -1,0 +1,57 @@
+angularJs  概念
+可以构建单页面应用  spa  single page application
+基于javascript编写的
+
+angularjs 使用  查找目录 才能调用  下载到全局  找不到 不能正常使用 应写在当前文件夹内
+
+四大功能
+  mvc   module view controler
+  模块化
+  指令
+  数据的双向绑定  ！！！！   mvvm 
+	module view view module
+mvc 
+
+mv*   *泛指
+
+三成架构
+
+项目目录  文件名称
+APP  >content>css+images   >javascripts  >controller 控制器
+
+引用各个控制器 在app主入口模块封装
+
+ng-show false   ng-if  false   隐藏
+novalidate form 中 不验证信息
+表单自动验证
+input 属性多了 换行
+
+common.css 公共的css样式
+bootstrap 样式
+
+一个页面  html  对应 一个控制器
+数剧双向绑定    登录信息屏台 
+
+内置指令  
+ ng  angular
+ng-app  指定angular  module作用域范围
+ng-controller     控制器
+ng-bind  向dom 节点绑定是数据
+ng-click   点击事件
+ng-if  判断条件、
+ng-show  显示 隐藏
+ng-class 绑定class   ----
+
+锚点
+
+ng-init 初始化一个参数
+ng-repeat  遍历数据  数组
+
+
+
+作用域
+scropt  应用在 html  javascript 之间的纽带  视图 控制其
+
+点击多选框 出来一个框
+
+666666666666666

@@ -1,0 +1,106 @@
+gulp入门-压缩js/css文件（windows）
+原创 2016年10月11日 13:37:02 4345
+1. 首先要确保pc上装有node，然后在global环境和项目文件中都install gulp
+    npm install gulp -g   (global环境)
+    npm install gulp --save-dev (项目环境)
+    
+2. 在项目中install需要的gulp插件，一般只压缩的话需要
+    npm install gulp-minify-css gulp-concat gulp-uglify gulp-rename del --save-dev
+    更多插件可以在这个链接中找到 http://gratimax.net/search-gulp-plugins/
+
+3. 在项目的根目录新建gulpfile.js，require需要的module
+    var gulp = require('gulp'),
+          minifycss = require('gulp-minify-css'),
+          concat = require('gulp-concat'),
+          uglify = require('gulp-uglify'),
+          rename = require('gulp-rename'),
+          del = require('del');
+
+4. 压缩css
+    gulp.task('minifycss', function() {
+       gulp.src('src/*.css')      //压缩的文件
+           .pipe(gulp.dest('minified/css'))   //输出文件夹
+           .pipe(minifycss());   //执行压缩
+    });
+
+5. 压缩js
+   gulp.task('minifyjs', function() {
+       gulp.src('src/*.js')
+          .pipe(concat('main.js'))    //合并所有js到main.js
+          .pipe(gulp.dest('minified/js'))    //输出main.js到文件夹
+          .pipe(rename({suffix: '.min'}))   //rename压缩后的文件名
+          .pipe(uglify())    //压缩
+          .pipe(gulp.dest('minified/js'));  //输出
+   });
+
+6. 执行压缩前，先删除文件夹里的内容
+    gulp.task('clean', function(cb) {
+        del(['minified/css', 'minified/js'], cb)
+    });
+
+7. 默认命令，在cmd中输入gulp后，执行的就是这个命令
+    gulp.task('default', ['clean'], function() {
+        gulp.start('minifycss', 'minifyjs');
+    });
+
+压缩html
+gulp.task('html', () => {
+	gulp.src('index.html')
+		.pipe(htmlmin({collapseWhitespace: true})) // 布尔值
+		.pipe(gulp.dest('./'));
+})
+
+可以使用gulp-imagemin插件来压缩jpg、png、gif等图片。？？？？？？？？？？？？？？？？？
+var gulp = require('gulp');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant'); //png图片压缩插件
+
+gulp.task('default', function () {
+    return gulp.src('src/images/*')
+        .pipe(imagemin({
+            progressive: true,
+            use: [pngquant()] //使用pngquant来压缩png图片
+        }))
+        .pipe(gulp.dest('dist'));
+});
+
+
+4.10 自动刷新
+
+使用gulp-livereload插件，安装:npm install --save-dev gulp-livereload。
+当代码变化时，它可以帮我们自动刷新页面
+该插件最好配合谷歌浏览器来使用，且要安装livereload chrome extension扩展插件,不能下载的请自行FQ。
+
+var gulp = require('gulp'),
+    less = require('gulp-less'),
+    livereload = require('gulp-livereload');
+
+gulp.task('less', function() {
+  gulp.src('less/*.less')
+    .pipe(less())
+    .pipe(gulp.dest('css'))
+    .pipe(livereload());
+});
+
+gulp.task('watch', function() {
+  livereload.listen(); //要在这里调用listen()方法
+  gulp.watch('less/*.less', ['less']);
+});
+
+监听    监听
+var gulp = require('gulp'),
+    watch = require('gulp-watch');
+ 
+gulp.task('stream', function () {
+    // Endless stream mode 
+    return watch('css/**/*.css', { ignoreInitial: false })
+        .pipe(gulp.dest('build'));
+});
+ 
+gulp.task('callback', function () {
+    // Callback mode, useful if any plugin in the pipeline depends on the `end`/`flush` event 
+    return watch('css/**/*.css', function () {
+        gulp.src('css/**/*.css')
+            .pipe(gulp.dest('build'));
+    });
+});

@@ -1,0 +1,36 @@
+发布
+git init 
+git add 文件
+git commit -m "注释"
+git remote add origin 路径(https.../ git....)
+git push -u origin master
+
+修改文件
+git merge --ff-only
+
+
+先下载库
+lenovo@LAPTOP-1ICDMCM9 MINGW64 ~/Desktop/222/angular (master)
+$ git add .  添加文件
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 ~/Desktop/222/angular (master)
+$ git commit -m "o" 
+[master 171d541] o
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+lenovo@LAPTOP-1ICDMCM9 MINGW64 ~/Desktop/222/angular (master)
+$ git push  上传文件 完成
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 234 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To github.com:lilydream/angular.git
+   18a55e3..171d541  master -> master
+
+
+分支
+checkout 
+bug分支 
+
+Git 简介
+git 是一款免费的 开源的 分布式的 版本控制系统
+git 是分布式      SVN 基于服务器
